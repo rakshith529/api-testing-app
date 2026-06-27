@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Dashboard</h2>
+  <a class="btn btn-primary" href="{{ url_for('tester') }}">New API Test</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card stat-card">
+      <div class="card-body">
+        <h6>Total Tests</h6>
+        <h3>{{ total_tests }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card">
+      <div class="card-body">
+        <h6>Total Findings</h6>
+        <h3>{{ findings_count }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card">
+      <div class="card-body">
+        <h6>Health</h6>
+        <h3>Learning Mode</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Most Used Endpoints</div>
+      <div class="card-body">
+        {% if top_endpoints %}
+          <ul class="list-group list-group-flush">
+            {% for endpoint, count in top_endpoints %}
+              <li class="list-group-item d-flex justify-content-between">
+                <code>{{ endpoint }}</code>
+                <span class="badge text-bg-secondary">{{ count }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted mb-0">No tests yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Response Status Distribution</div>
+      <div class="card-body">
+        {% if status_buckets %}
+          <ul class="list-group list-group-flush">
+            {% for label, count in status_buckets.items() %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span>{{ label }}</span>
+                <span class="badge text-bg-info">{{ count }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted mb-0">No response data yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-4">
+  <div class="card-header">Recent Tests</div>
+  <div class="table-responsive">
+    <table class="table table-sm table-striped mb-0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Time</th>
+          <th>Type</th>
+          <th>Method</th>
+          <th>Endpoint</th>
+          <th>Status</th>
+          <th>RTT (ms)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in recent %}
+          <tr>
+            <td>{{ row['id'] }}</td>
+            <td>{{ row['created_at'] }}</td>
+            <td><span class="badge text-bg-light">{{ row['category'] }}</span></td>
+            <td><span class="badge text-bg-dark">{{ row['method'] }}</span></td>
+            <td><code>{{ row['url'] }}</code></td>
+            <td>{{ row['status_code'] or '-' }}</td>
+            <td>{{ row['response_time_ms'] or '-' }}</td>
+            <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('history_item', test_id=row['id']) }}">View</a></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="8" class="text-center text-muted">No tests recorded yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

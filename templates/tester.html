@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-3">API Request Builder</h2>
+<p class="text-muted">Send GET/POST/PUT/DELETE requests and inspect API behavior. This simulates how AppSec teams manually probe endpoints.</p>
+
+<form method="post" class="card p-3">
+  <div class="row g-3">
+    <div class="col-md-2">
+      <label class="form-label">Method</label>
+      <select name="method" class="form-select">
+        <option>GET</option>
+        <option>POST</option>
+        <option>PUT</option>
+        <option>DELETE</option>
+      </select>
+    </div>
+    <div class="col-md-8">
+      <label class="form-label">Target URL</label>
+      <input name="url" class="form-control" placeholder="https://api.example.com/v1/users" required>
+      <div class="form-text">Local/private targets are blocked to avoid SSRF abuse.</div>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Timeout (sec)</label>
+      <input name="timeout_sec" type="number" min="1" max="30" value="10" class="form-control">
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <label class="form-label">Auth Token (optional)</label>
+    <input name="auth_token" class="form-control" placeholder="JWT or bearer token without 'Bearer ' prefix">
+  </div>
+
+  <div class="row g-3 mt-1">
+    <div class="col-md-4">
+      <label class="form-label">Headers (JSON)</label>
+      <textarea name="headers" rows="8" class="form-control code-box">{
+  "Accept": "application/json"
+}</textarea>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Query Params (JSON)</label>
+      <textarea name="params" rows="8" class="form-control code-box">{
+  "page": 1
+}</textarea>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">JSON Body</label>
+      <textarea name="json_body" rows="8" class="form-control code-box">{
+  "name": "intern"
+}</textarea>
+    </div>
+  </div>
+
+  <div class="mt-3 d-flex gap-2">
+    <button class="btn btn-primary" type="submit">Send Request</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('history') }}">View History</a>
+  </div>
+</form>
+{% endblock %}

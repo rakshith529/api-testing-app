@@ -1,0 +1,21 @@
+body {
+  background: #f7f9fb;
+}
+
+.code-box {
+  font-family: Consolas, 'Courier New', monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0f172a;
+  color: #dbeafe;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.stat-card {
+  border-left: 4px solid #0d6efd;
+}
+
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

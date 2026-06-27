@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>JWT Analyzer</h2>
+<p class="text-muted">Decode token parts to understand how APIs carry identity claims. This page does not verify signatures.</p>
+
+<form method="post" class="card p-3 mb-3">
+  <label class="form-label">JWT Token</label>
+  <textarea class="form-control code-box" name="jwt_token" rows="5" placeholder="eyJhbGciOi...">{{ token }}</textarea>
+  <div class="mt-3"><button class="btn btn-primary">Analyze Token</button></div>
+</form>
+
+{% if analysis %}
+  {% if not analysis.valid %}
+    <div class="alert alert-danger">{{ analysis.error }}</div>
+  {% else %}
+    <div class="row g-3">
+      <div class="col-md-4"><div class="card p-3"><small>Algorithm</small><h5>{{ analysis.algorithm or 'Unknown' }}</h5></div></div>
+      <div class="col-md-4"><div class="card p-3"><small>Expires At</small><h6>{{ analysis.expires_at or 'No exp claim' }}</h6></div></div>
+      <div class="col-md-4"><div class="card p-3"><small>Expired?</small><h5>{{ analysis.is_expired }}</h5></div></div>
+    </div>
+
+    {% if analysis.algorithm_warning %}
+      <div class="alert alert-warning mt-3">{{ analysis.algorithm_warning }}</div>
+    {% endif %}
+
+    <div class="row g-3 mt-1">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">Header</div>
+          <div class="card-body"><pre class="code-box">{{ analysis.header | tojson(indent=2) }}</pre></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">Payload</div>
+          <div class="card-body"><pre class="code-box">{{ analysis.payload | tojson(indent=2) }}</pre></div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

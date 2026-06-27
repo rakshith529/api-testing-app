@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Test Result #{{ test_id }}</h2>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('rerun', test_id=test_id) }}">Re-run</a>
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('history') }}">Back to History</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="card p-3"><small>Status</small><h4>{{ result.status_code or 'N/A' }}</h4></div></div>
+  <div class="col-md-3"><div class="card p-3"><small>Response Time</small><h4>{{ result.response_time_ms or '-' }} ms</h4></div></div>
+  <div class="col-md-3"><div class="card p-3"><small>Response Size</small><h4>{{ result.response_size or 0 }} bytes</h4></div></div>
+  <div class="col-md-3"><div class="card p-3"><small>Method</small><h4>{{ result.method }}</h4></div></div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Endpoint</div>
+  <div class="card-body"><code>{{ result.url }}</code></div>
+</div>
+
+{% if result.error %}
+  <div class="alert alert-danger">{{ result.error }}</div>
+{% endif %}
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Security Findings</div>
+      <div class="card-body">
+        {% if findings %}
+          <ul>
+            {% for f in findings %}
+              <li>{{ f }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted">No immediate findings from basic checks.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Response Headers</div>
+      <div class="card-body">
+        <pre class="code-box small">{{ result.response_headers | tojson(indent=2) }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header">Response Body</div>
+  <div class="card-body">
+    <pre class="code-box">{{ result.response_body }}</pre>
+  </div>
+</div>
+{% endblock %}
